@@ -1,0 +1,44 @@
+{
+  "name": "nuxt-myle",
+  "version": "0.0.21",
+  "description": "My new Nuxt module",
+  "repository": "domutala/nuxt-myle",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/module.cjs",
+  "types": "./dist/types.d.ts",
+  "style": "./dist/runtime/myle/style/myle.css",
+  "sass": "./dist/runtime/myle/style/myle.scss",
+  "files": [
+    "dist",
+    "src/runtime/myle/style/**/* dist/"
+  ],
+  "scripts": {
+    "prepack": "nuxt-module-build && gulp copy:style",
+    "dev": "nuxi dev playground",
+    "dev:build": "nuxi build playground",
+    "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground",
+    "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest watch"
+  },
+  "dependencies": {
+    "@nuxt/kit": "^3.4.3"
+  },
+  "devDependencies": {
+    "@nuxt/eslint-config": "^0.1.1",
+    "@nuxt/module-builder": "^0.3.0",
+    "@nuxt/schema": "^3.4.3",
+    "@nuxt/test-utils": "^3.4.3",
+    "@nuxtjs/style-resources": "^1.2.1",
+    "@types/gulp": "^4.0.10",
+    "@types/node": "^18",
+    "changelogen": "^0.5.3",
+    "eslint": "^8.39.0",
+    "gulp": "^4.0.2",
+    "nuxt": "^3.4.3",
+    "sass": "^1.62.1",
+    "vitest": "^0.30.1"
+  }
+}
