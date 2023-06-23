@@ -91,7 +91,7 @@ export function popper(
       : "662px";
 
   if (options.onScroll) {
-    _content.addEventListener("scroll", () => options.onScroll!());
+    firstChild.addEventListener("scroll", () => options.onScroll!());
   }
 
   document.body.appendChild(_content);
