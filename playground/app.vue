@@ -146,7 +146,11 @@ function close() {
       :options="{ type: 'popup' }"
     >
       <template #target>
-        <m-button class="">*** popup ***</m-button>
+        <m-button
+          :flat="0.1"
+          class=""
+          >*** popup ***</m-button
+        >
       </template>
       <div class="p-20">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim veniam
@@ -478,7 +482,11 @@ function close() {
       :options="{ type: 'modal', targetClass: 'my-25 mx-auto' }"
     >
       <template #target>
-        <m-button>*** popup ***</m-button>
+        <m-button
+          border
+          :border-width="1.5"
+          >*** popup- ***</m-button
+        >
       </template>
       <div class="p-20">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim veniam

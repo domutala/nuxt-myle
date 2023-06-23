@@ -15,7 +15,7 @@ const props = defineProps({
   dark: { default: false, type: Boolean },
   light: { default: false, type: Boolean },
 
-  flat: { default: false, type: Boolean },
+  flat: { default: false, type: [Boolean, Number] },
   transparent: { default: false, type: Boolean },
   block: { default: false, type: Boolean },
   textAlign: {
@@ -76,10 +76,17 @@ onMounted(() => {});
     }"
     :disabled="disabled"
   >
-    <div class="button-background"></div>
     <div
+      class="button-background"
+      :style="{
+        opacity: typeof flat === 'boolean' ? 0.3 : flat ? flat : 'unset',
+      }"
+    ></div>
+    <div
+      v-if="border"
       class="button-border"
       :style="{
+        opacity: typeof flat === 'boolean' ? 0.3 : flat ? flat : 'unset',
         borderWidth:
           typeof borderWidth === 'number' ? `${borderWidth}px` : borderWidth,
       }"
