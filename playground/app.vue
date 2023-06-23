@@ -485,6 +485,8 @@ function close() {
         <m-button
           border
           :border-width="1.5"
+          dark
+          :flat="0.1"
           >*** popup- ***</m-button
         >
       </template>

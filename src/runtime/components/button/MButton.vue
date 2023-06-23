@@ -79,14 +79,14 @@ onMounted(() => {});
     <div
       class="button-background"
       :style="{
-        opacity: typeof flat === 'boolean' ? 0.3 : flat ? flat : 'unset',
+        opacity: typeof flat === 'boolean' ? 0.1 : flat ? flat : 'unset',
       }"
     ></div>
     <div
       v-if="border"
       class="button-border"
       :style="{
-        opacity: typeof flat === 'boolean' ? 0.3 : flat ? flat : 'unset',
+        opacity: typeof flat === 'boolean' ? 0.1 : flat ? flat : 'unset',
         borderWidth:
           typeof borderWidth === 'number' ? `${borderWidth}px` : borderWidth,
       }"
@@ -210,12 +210,12 @@ $colors: (
     }
   }
 
-  &.flat {
-    .button-background,
-    .button-border {
-      opacity: 0.3;
-    }
-  }
+  // &.flat {
+  //   .button-background,
+  //   .button-border {
+  //     opacity: 0.3;
+  //   }
+  // }
 
   &.transparent {
     .button-background {
