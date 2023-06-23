@@ -84,10 +84,10 @@ onMounted(() => {});
           typeof borderWidth === 'number' ? `${borderWidth}px` : borderWidth,
       }"
     ></div>
+    <div class="button-hover"></div>
     <div class="button-content">
       <slot />
     </div>
-    <div class="button-hover"></div>
   </component>
 </template>
 

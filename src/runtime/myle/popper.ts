@@ -6,7 +6,7 @@ export interface PopperOptions {
   /** @default true */ closeOnEsc?: boolean;
   /** @default 0 */ paddingClose?: number;
   /** @default 7 */ offset?: number;
-  /** @default 410 */ width?: number;
+  /** @default 662 */ width?: number | string;
 
   targetClass?: string;
 
@@ -82,7 +82,13 @@ export function popper(
   }
 
   const firstChild = _content.children.item(0) as HTMLElement;
-  firstChild.style.width = `${options.width || 662}px`;
+  firstChild.style.width =
+    typeof options.width === "string"
+      ? `${options.width}`
+      : typeof options.width === "number"
+      ? `${options.width}px`
+      : "662px";
+
   document.body.appendChild(_content);
 
   _content.setAttribute(`data-popper-${_id}`, "");

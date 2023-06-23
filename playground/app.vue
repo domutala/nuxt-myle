@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import MPopperControllerClient from "../src/runtime/components/modal/MPopperController.client.vue";
+import "../src/runtime/myle/style/myle.scss";
 
 const value = ref("");
 const controller1 = ref<InstanceType<typeof MPopperControllerClient>>();
@@ -304,7 +305,7 @@ function close() {
       ipsum dolor sit, amet cons
     </div>
 
-    <m-popper-controller>
+    <m-popper-controller :options="{ width: '90%' }">
       <template #target> <button>*********************</button></template>
       <div class="p-20">
         Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sapiente esse
@@ -474,7 +475,7 @@ function close() {
     </m-popper-controller>
 
     <m-popper-controller
-      :options="{ type: 'popup', targetClass: 'my-25 mx-auto' }"
+      :options="{ type: 'modal', targetClass: 'my-25 mx-auto' }"
     >
       <template #target>
         <m-button>*** popup ***</m-button>
