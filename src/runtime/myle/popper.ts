@@ -82,10 +82,6 @@ export function popper(
     _content.classList.add("popup");
   }
 
-  if (options.onScroll) {
-    _content.addEventListener("scroll", () => options.onScroll!());
-  }
-
   const firstChild = _content.children.item(0) as HTMLElement;
   firstChild.style.width =
     typeof options.width === "string"
@@ -93,6 +89,10 @@ export function popper(
       : typeof options.width === "number"
       ? `${options.width}px`
       : "662px";
+
+  if (options.onScroll) {
+    _content.addEventListener("scroll", () => options.onScroll!());
+  }
 
   document.body.appendChild(_content);
 
