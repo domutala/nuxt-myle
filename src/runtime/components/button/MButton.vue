@@ -79,7 +79,13 @@ onMounted(() => {});
     <div
       class="button-background"
       :style="{
-        opacity: typeof flat === 'boolean' ? 0.1 : flat ? flat : 'unset',
+        opacity: transparent
+          ? '0'
+          : flat === true
+          ? '0.1'
+          : typeof flat === 'number'
+          ? flat
+          : 'unset',
       }"
     ></div>
     <div
@@ -217,11 +223,11 @@ $colors: (
   //   }
   // }
 
-  &.transparent {
-    .button-background {
-      opacity: 0;
-    }
-  }
+  // &.transparent {
+  //   .button-background {
+  //     opacity: 0;
+  //   }
+  // }
 
   &:disabled {
     opacity: 0.5;

@@ -18,6 +18,7 @@ export interface PopperOptions {
 
   onDestroy?: (popper?: Popper) => void;
   onMounted?: (popper?: Popper) => void;
+  onScroll?: () => void;
 }
 
 export interface Popper {
@@ -79,6 +80,10 @@ export function popper(
   } else if (options.type === "popup") {
     _content.classList.remove("popup");
     _content.classList.add("popup");
+  }
+
+  if (options.onScroll) {
+    _content.addEventListener("scroll", () => options.onScroll!());
   }
 
   const firstChild = _content.children.item(0) as HTMLElement;

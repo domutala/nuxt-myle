@@ -309,7 +309,7 @@ function close() {
       ipsum dolor sit, amet cons
     </div>
 
-    <m-popper-controller :options="{ width: '90%' }">
+    <m-popper-controller :options="{ width: '90vh' }">
       <template #target> <button>*********************</button></template>
       <div class="p-20">
         Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sapiente esse
@@ -486,7 +486,7 @@ function close() {
           border
           :border-width="1.5"
           dark
-          :flat="0.1"
+          flat
           >*** popup- ***</m-button
         >
       </template>
