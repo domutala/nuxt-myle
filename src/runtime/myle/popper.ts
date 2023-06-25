@@ -155,7 +155,7 @@ export function popper(
     if (options.closeOnEsc && event.key === "Escape") destroy();
   }
 
-  function destroy() {
+  async function destroy() {
     removeEventListener("click", onOutsideClick);
     removeContent();
 
