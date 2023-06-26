@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { PropType } from "nuxt/dist/app/compat/capi";
 import { ref, onMounted, watch } from "vue";
 
 const input = ref<HTMLInputElement | undefined>();
@@ -6,7 +7,7 @@ const isFocus = ref(false);
 const value = ref();
 
 const props = defineProps({
-  modelValue: { default: "", type: [String] },
+  modelValue: { default: () => null, type: Object as PropType<any> },
   labelPlaceholder: { default: "", type: String },
   placeholder: { default: "", type: String },
   autocomplete: { default: "", type: String },
