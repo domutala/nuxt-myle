@@ -23,9 +23,9 @@ export interface PopperOptions {
 
 export interface Popper {
   destroy: () => void;
-  utils: {
-    isEnd(): boolean;
-  };
+  utils: { isEnd(): boolean };
+  content: HTMLElement;
+  firstChild: HTMLElement;
 }
 
 declare global {
@@ -113,6 +113,8 @@ export function popper(
   const popper = {
     destroy,
     utils,
+    content: _content,
+    firstChild,
   };
 
   if (options.type === "popup" && _target) {
