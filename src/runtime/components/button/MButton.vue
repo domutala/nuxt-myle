@@ -216,19 +216,6 @@ $colors: (
     }
   }
 
-  // &.flat {
-  //   .button-background,
-  //   .button-border {
-  //     opacity: 0.3;
-  //   }
-  // }
-
-  // &.transparent {
-  //   .button-background {
-  //     opacity: 0;
-  //   }
-  // }
-
   &:disabled {
     opacity: 0.5;
     cursor: default;
@@ -241,6 +228,10 @@ $colors: (
   &.block {
     display: flex;
     width: 100%;
+
+    .button-content {
+      width: 100%;
+    }
   }
 
   &.button-text-align-center {

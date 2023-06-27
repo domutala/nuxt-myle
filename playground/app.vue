@@ -149,8 +149,9 @@ function close() {
         <m-button
           :flat="0.1"
           class=""
-          >*** popup ***</m-button
         >
+          *** popup ***
+        </m-button>
       </template>
       <div class="p-20">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim veniam
