@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { PropType } from "nuxt/dist/app/compat/capi";
 import { ref, onMounted, watch } from "vue";
 
 const input = ref<HTMLInputElement | undefined>();
@@ -6,11 +7,10 @@ const isFocus = ref(false);
 const value = ref();
 
 const props = defineProps({
-  modelValue: { default: "", type: [String] },
+  modelValue: { default: () => null, type: Object as PropType<any> },
   labelPlaceholder: { default: "", type: String },
   placeholder: { default: "", type: String },
   autocomplete: { default: "", type: String },
-  noborder: { default: false, type: Boolean },
   disabled: { default: false, type: Boolean },
   success: { default: false, type: Boolean },
   danger: { default: false, type: Boolean },
@@ -19,6 +19,7 @@ const props = defineProps({
   autofocus: { default: false, type: Boolean },
   type: { default: "text", type: String },
   borderWidth: { default: "2px", type: [String, Number] },
+  borderRadius: { default: "0.6em", type: [String, Number] },
 });
 
 const emit = defineEmits<{ (e: "update:modelValue", value: any): void }>();
@@ -55,7 +56,6 @@ defineExpose({ focus });
     <div
       class="--container"
       :class="{
-        noborder,
         disabled,
         success,
         danger,
@@ -65,6 +65,9 @@ defineExpose({ focus });
       :style="{
         borderWidth: `${borderWidth}${
           typeof borderWidth === 'number' ? 'px' : ''
+        }`,
+        borderRadius: `${borderRadius}${
+          typeof borderRadius === 'number' ? 'px' : ''
         }`,
       }"
     >
@@ -117,8 +120,9 @@ defineExpose({ focus });
           @input="onInput"
           @focus="isFocus = true"
           @blur="isFocus = false"
-          >{{ value }}</textarea
         >
+          {{ value }}
+        </textarea>
         <slot name="textarea" />
       </div>
     </div>
@@ -140,7 +144,7 @@ defineExpose({ focus });
     width: 100%;
     border: 0 solid var(--dark-080);
     padding: 2px 15px;
-    border-radius: 0.6em;
+    // border-radius: 0.6em;
     transition: all 0.25s ease;
 
     &.fill {
@@ -213,10 +217,6 @@ defineExpose({ focus });
         outline: none;
         padding: 0;
       }
-    }
-
-    &.noborder {
-      border-width: 0 !important;
     }
 
     &.focus {

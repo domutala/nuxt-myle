@@ -17,6 +17,7 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: "close"): void;
   (e: "open"): void;
+  (e: "destroy"): void;
   (e: "update:modelValue", value: boolean): void;
 }>();
 
@@ -37,6 +38,7 @@ function mounted() {
 function destroyed() {
   emit("update:modelValue", false);
   emit("close");
+  emit("destroy");
 }
 
 onBeforeUnmount(destroy);

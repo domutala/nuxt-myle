@@ -23,9 +23,9 @@ export interface PopperOptions {
 
 export interface Popper {
   destroy: () => void;
-  utils: {
-    isEnd(): boolean;
-  };
+  utils: { isEnd(): boolean };
+  content: HTMLElement;
+  firstChild: HTMLElement;
 }
 
 declare global {
@@ -113,6 +113,8 @@ export function popper(
   const popper = {
     destroy,
     utils,
+    content: _content,
+    firstChild,
   };
 
   if (options.type === "popup" && _target) {
@@ -155,7 +157,7 @@ export function popper(
     if (options.closeOnEsc && event.key === "Escape") destroy();
   }
 
-  function destroy() {
+  async function destroy() {
     removeEventListener("click", onOutsideClick);
     removeContent();
 
