@@ -21,6 +21,9 @@
   .bg-#{$name} {
     background-color: var(--#{$name});
   }
+  .color-#{$name} {
+    color: var(--#{$name});
+  }
 
   @for $i from 1 through 100 {
     $o: 100 - $i;
@@ -32,6 +35,9 @@
 
     .bg-#{$name}-#{$o} {
       background-color: var(--#{$name}-#{$o});
+    }
+    .color-#{$name}-#{$o} {
+      color: var(--#{$name}-#{$o});
     }
   }
 }
