@@ -6,7 +6,11 @@ defineProps({
 </script>
 
 <template>
-  <svg xmlns="http://www.w3.org/2000/svg" :class="className">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    :class="className"
+    v-bind="$attrs"
+  >
     <use :href="`/mi/icons/micons.svg#${name}`" />
   </svg>
 </template>
@@ -14,6 +18,7 @@ defineProps({
 <style>
 svg {
   fill: currentColor;
+  stroke: currentcolor;
   max-height: 100%;
   max-width: 100%;
 }

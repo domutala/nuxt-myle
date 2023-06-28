@@ -4,6 +4,7 @@ import MPopperControllerClient from "../src/runtime/components/modal/MPopperCont
 import "../src/runtime/myle/style/myle.scss";
 
 const value = ref("");
+const isChecked = ref(["false", "true"]);
 const controller1 = ref<InstanceType<typeof MPopperControllerClient>>();
 
 function close() {
@@ -15,6 +16,12 @@ function close() {
 
 <template>
   <div class="container py-20">
+    <m-checkbox
+      v-model:model-value="isChecked"
+      value="hello"
+      dark
+    />
+
     Nuxt module playground!
 
     <div>
