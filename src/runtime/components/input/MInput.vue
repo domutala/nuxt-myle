@@ -7,7 +7,18 @@ const isFocus = ref(false);
 const value = ref();
 
 const props = defineProps({
-  modelValue: { default: () => null, type: Object as PropType<any> },
+  modelValue: {
+    default: () => null,
+    type: [
+      Object,
+      Array,
+      String,
+      Number,
+      undefined,
+      null,
+      Boolean,
+    ] as PropType<any>,
+  },
   labelPlaceholder: { default: "", type: String },
   placeholder: { default: "", type: String },
   autocomplete: { default: "", type: String },

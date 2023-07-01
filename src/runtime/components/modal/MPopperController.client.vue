@@ -21,7 +21,7 @@ const emit = defineEmits<{
   (e: "open"): void;
   (e: "update:modelValue", value: boolean): void;
 }>();
-const open = ref(false);
+const isOpen = ref(false);
 const opts = ref<PopperOptions>({});
 const target = ref<HTMLElement>();
 const popper = ref<Popper>();
@@ -40,8 +40,12 @@ function mounted() {
       if (props.options.onMounted) props.options.onMounted(p);
     };
 
-    if (props.options.openOnMounted) open.value = true;
+    if (props.options.openOnMounted) open();
   }, 0);
+}
+
+function open() {
+  isOpen.value = true;
 }
 
 function onScroll() {
@@ -49,33 +53,33 @@ function onScroll() {
   if (props.options.onScroll) props.options.onScroll();
 }
 function onDestroy() {
-  open.value = false;
+  isOpen.value = false;
 
   emit("destroy");
   if (props.options.onDestroy) props.options.onDestroy();
 }
 
-defineExpose({ popper });
+defineExpose({ popper, open });
 </script>
 
 <template>
   <span
     ref="target"
     :class="opts.targetClass"
-    @click="open = true"
+    @click="open()"
   >
     <slot name="target" />
   </span>
 
   <m-popup
-    v-if="open && opts.type === 'popup'"
+    v-if="isOpen && opts.type === 'popup'"
     :options="opts"
     @destroy="onDestroy"
   >
     <slot />
   </m-popup>
   <m-modal
-    v-else-if="open"
+    v-else-if="isOpen"
     :options="opts"
     @close="onDestroy"
     @destroy="onDestroy"
