@@ -51,7 +51,10 @@ function onInput() {
 
 watch(() => props.modelValue, onModelValue);
 function onModelValue() {
-  value.value = props.modelValue;
+  setTimeout(() => {
+    if (input.value) input.value.value = props.modelValue;
+    value.value = props.modelValue;
+  }, 10);
 }
 
 function focus() {

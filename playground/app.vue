@@ -21,6 +21,11 @@ function close() {
       type="textarea"
       label-placeholder="Lorem ipsum dolor sit amet consectetur"
     />
+    <m-input
+      v-model:model-value="value"
+      type="textarea"
+      label-placeholder="Lorem ipsum dolor sit amet consectetur 22"
+    />
     <!-- <m-checkbox
       v-model:model-value="isChecked"
       value="hello"
