@@ -131,9 +131,8 @@ defineExpose({ focus });
           @input="onInput"
           @focus="isFocus = true"
           @blur="isFocus = false"
+          >{{ value }}</textarea
         >
-          {{ value }}
-        </textarea>
         <slot name="textarea" />
       </div>
     </div>
