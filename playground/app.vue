@@ -16,11 +16,16 @@ function close() {
 
 <template>
   <div class="container py-20">
-    <m-checkbox
+    <m-input
+      v-model:model-value="value"
+      type="textarea"
+      label-placeholder="Lorem ipsum dolor sit amet consectetur"
+    />
+    <!-- <m-checkbox
       v-model:model-value="isChecked"
       value="hello"
       dark
-    />
+    /> -->
 
     Nuxt module playground!
 
