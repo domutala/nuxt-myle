@@ -154,10 +154,10 @@ function close() {
     >
       <template #target>
         <m-button
-          :flat="0.1"
-          class=""
+          danger
+          border-width="3px"
         >
-          *** popup ***
+          *** hello ***
         </m-button>
       </template>
       <div class="p-20">
@@ -491,12 +491,14 @@ function close() {
     >
       <template #target>
         <m-button
+          :border-width="3"
+          theme="#52f751"
           border
-          :border-width="1.5"
-          dark
-          flat
-          >*** popup- ***</m-button
+          :flat="0.9"
+          elevate
         >
+          *** popup ***
+        </m-button>
       </template>
       <div class="p-20">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim veniam

@@ -1,6 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted, type PropType } from "vue";
+import { computed, onMounted, type PropType, ref, watch } from "vue";
 import type { RouteLocationRaw } from "vue-router";
+import {
+  GetContrastTextColor,
+  GetVarColor,
+  BlendColor,
+} from "../../../runtime/myle/utils/Color";
+
+const button = ref<HTMLButtonElement>();
 
 const props = defineProps({
   tag: {
@@ -8,12 +15,39 @@ const props = defineProps({
     type: String as PropType<"a" | "button" | "div" | "router-link">,
   },
   to: { type: Object as PropType<RouteLocationRaw> },
-  primary: { default: true, type: Boolean },
+
+  /** THEME */
+  theme: {
+    type: String as PropType<
+      "dark" | "light" | "danger" | "info" | "success" | "primary" | string
+    >,
+    validator(value: string) {
+      if (value === undefined) return true;
+
+      if (
+        ["dark", "light", "danger", "info", "success", "primary"].includes(
+          value
+        )
+      ) {
+        return true;
+      } else if (
+        /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(value) ||
+        /^rgba?\((\d{1,3}),(\d{1,3}),(\d{1,3})(,(\d(\.\d+)?))?\)$/.test(
+          value.replace(/\s/g, "")
+        )
+      ) {
+        return true;
+      }
+      return false;
+    },
+  },
+  primary: { default: false, type: Boolean },
   danger: { default: false, type: Boolean },
   success: { default: false, type: Boolean },
   info: { default: false, type: Boolean },
   dark: { default: false, type: Boolean },
   light: { default: false, type: Boolean },
+  /** THEME */
 
   flat: { default: false, type: [Boolean, Number] },
   transparent: { default: false, type: Boolean },
@@ -23,21 +57,26 @@ const props = defineProps({
     type: String as PropType<"left" | "right" | "center">,
   },
 
-  borderWidth: { default: 3, type: [Number, String] },
+  /** @deprecated */ border: { type: [Boolean, Number, String] },
+  borderWidth: { default: false, type: [Boolean, Number, String] },
 
+  /** radius */
+  /** @deprecated */ round: { type: [Boolean, String, Number] },
+  borderRadius: { default: "16em", type: [Boolean, String, Number] },
+
+  /** SIZE */
   lg: { default: false, type: Boolean },
   sm: { default: false, type: Boolean },
+  /** SIZE */
 
-  square: { default: false, type: Boolean },
-  round: { default: "16em", type: [Boolean, String, Number] },
+  elevate: { default: false, type: Boolean },
   icon: { default: false, type: Boolean },
-  border: { default: false, type: Boolean },
   disabled: { default: false, type: Boolean },
   type: { default: "button", type: String },
 });
 
 const typeColor = computed(() => {
-  return props.dark
+  const typeColor = props.dark
     ? "dark"
     : props.light
     ? "light"
@@ -48,6 +87,106 @@ const typeColor = computed(() => {
     : props.success
     ? "success"
     : "primary";
+
+  return props.theme || typeColor;
+});
+
+onMounted(mounted);
+function mounted() {
+  buildColor();
+}
+
+watch(() => props.flat, buildColor);
+watch(() => typeColor.value, buildColor);
+function buildColor() {
+  setTimeout(() => {
+    if (button.value) {
+      const bgElement = button.value.querySelector(
+        ".button-background"
+      ) as HTMLButtonElement;
+
+      if (
+        /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(typeColor.value) ||
+        /^rgba?\((\d{1,3}),(\d{1,3}),(\d{1,3})(,(\d(\.\d+)?))?\)$/.test(
+          typeColor.value.replace(/\s/g, "")
+        )
+      ) {
+        button.value.style.setProperty("--button-theme", typeColor.value);
+      } else {
+        button.value.style.setProperty(
+          "--button-theme",
+          `var(--${typeColor.value})`
+        );
+      }
+      let color = GetVarColor(document.body, "var(--primary)") as string;
+
+      const varColor = button.value.style.getPropertyValue("--button-theme");
+      color = GetVarColor(button.value, varColor) || color;
+      color = BlendColor(color, bgElement?.style.getPropertyValue("opacity"));
+
+      const textColor = GetContrastTextColor(color) === 1 ? "black" : "white";
+      button.value.style.setProperty("--button-text-color", textColor);
+
+      const bdElement = button.value.querySelector(
+        ".button-hover"
+      ) as HTMLButtonElement;
+      if (bdElement) {
+        bdElement.style.backgroundColor =
+          GetContrastTextColor(color) === 1 ? "black" : "white";
+      }
+    }
+  }, 10);
+}
+
+const styles = computed(() => {
+  const styles: { [key: string]: string } = {};
+  const round = props.round || props.borderRadius;
+  styles.borderRadius =
+    round === false
+      ? "0"
+      : round === true
+      ? "0.6em"
+      : typeof round === "number"
+      ? `${round}px`
+      : round;
+
+  return styles;
+});
+
+const bgStyles = computed(() => {
+  const styles: { [key: string]: string } = {};
+  styles.opacity = props.transparent
+    ? "0"
+    : props.flat === true
+    ? "0.1"
+    : typeof props.flat === "number"
+    ? `${props.flat}`
+    : "unset";
+
+  return styles;
+});
+
+const broderStyles = computed(() => {
+  const styles: { [key: string]: string } = {};
+
+  const border = props.border || props.borderWidth;
+  styles.borderWidth =
+    border === true
+      ? "3px"
+      : border === false
+      ? "0"
+      : typeof border === "number"
+      ? `${border}px`
+      : border;
+
+  styles.opacity =
+    props.flat === true
+      ? "0.1"
+      : typeof props.flat === "number"
+      ? `${props.flat}`
+      : "unset";
+
+  return styles;
 });
 
 onMounted(() => {});
@@ -56,46 +195,25 @@ onMounted(() => {});
 <template>
   <component
     :is="tag"
+    ref="button"
     :to="to"
     class="button"
     :class="[
       typeColor,
       `button-text-align-${textAlign}`,
-      { square, border, flat, icon, lg, sm, transparent, block },
+      { flat, icon, elevate, lg, sm, transparent, block },
     ]"
     :type="props.type as 'button'"
-    :style="{
-      borderRadius:
-        round === false
-          ? '0'
-          : typeof round === 'boolean'
-          ? '0.6em'
-          : typeof round === 'number'
-          ? `${round}px`
-          : round,
-    }"
+    :style="styles"
     :disabled="disabled"
   >
     <div
       class="button-background"
-      :style="{
-        opacity: transparent
-          ? '0'
-          : flat === true
-          ? '0.1'
-          : typeof flat === 'number'
-          ? flat
-          : 'unset',
-      }"
+      :style="bgStyles"
     ></div>
     <div
-      v-if="border"
       class="button-border"
-      :style="{
-        opacity: typeof flat === 'boolean' ? 0.1 : flat ? flat : 'unset',
-        borderWidth:
-          typeof borderWidth === 'number' ? `${borderWidth}px` : borderWidth,
-      }"
+      :style="broderStyles"
     ></div>
     <div class="button-hover"></div>
     <div class="button-content">
@@ -105,15 +223,6 @@ onMounted(() => {});
 </template>
 
 <style lang="scss">
-$colors: (
-  "danger" #fff #000 #000,
-  "info" #000 #000 #000,
-  "success" #fff #000 #000,
-  "primary" #000 #000 #000,
-  "dark" var(--light) var(--dark) var(--light),
-  "light" var(--dark) var(--dark) var(--dark)
-);
-
 .button {
   position: relative;
   background-color: transparent;
@@ -126,7 +235,7 @@ $colors: (
   cursor: pointer;
   align-items: center;
   display: inline-flex;
-
+  transition: all 0.5s ease;
   svg {
     width: 28px;
     height: 28px;
@@ -138,7 +247,7 @@ $colors: (
   }
 
   .button-background {
-    background-color: var(--primary);
+    background-color: unset;
     position: absolute;
     top: 0;
     left: 0;
@@ -152,7 +261,8 @@ $colors: (
     left: 0;
     bottom: 0;
     right: 0;
-    border: 3px solid #00000033;
+    border-color: #00000033;
+    border-style: solid;
   }
 
   .button-hover {
@@ -161,8 +271,7 @@ $colors: (
     left: 0;
     bottom: 0;
     right: 0;
-    background-color: #000;
-    opacity: 0.1;
+    opacity: 0.08;
   }
 
   .button-content {
@@ -177,43 +286,32 @@ $colors: (
     min-width: 42px;
   }
 
+  &.elevate {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+      rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  }
+
   &:not(:hover) {
     .button-hover {
       opacity: 0;
     }
   }
 
-  @for $i from 1 through length($colors) {
-    $color-name: nth(nth($colors, $i), 1);
-    $color-value: nth(nth($colors, $i), 2);
-    $color-value-flat: nth(nth($colors, $i), 3);
-    $color-value-hover: nth(nth($colors, $i), 4);
+  &:hover {
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
 
-    &.#{$color-name} {
-      color: $color-value;
+  --button-theme: var(--primary);
+  --button-text-color: var(--dark);
+  --button-border-color: green;
 
-      .button-background {
-        background-color: var(--#{$color-name});
-      }
-      .button-border {
-        border-color: var(--#{$color-name});
-      }
-      .button-hover {
-        background-color: $color-value-flat;
-      }
+  color: var(--button-text-color);
 
-      &.flat {
-        color: $color-value-flat;
-      }
-
-      &.transparent {
-        color: var(--#{$color-name});
-
-        .button-hover {
-          background-color: var(--#{$color-name});
-        }
-      }
-    }
+  .button-background {
+    background-color: var(--button-theme);
+  }
+  .button-border {
+    border-color: var(--button-theme);
   }
 
   &:disabled {
@@ -248,20 +346,6 @@ $colors: (
     .button-content {
       justify-content: flex-end;
     }
-  }
-
-  &:not(.border) {
-    .button-border {
-      opacity: 0;
-    }
-  }
-
-  &.square {
-    border-radius: 0;
-  }
-
-  &.round {
-    border-radius: 0.6em;
   }
 
   &.icon {
