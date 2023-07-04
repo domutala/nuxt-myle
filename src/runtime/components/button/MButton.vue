@@ -236,6 +236,7 @@ onMounted(() => {});
   align-items: center;
   display: inline-flex;
   transition: all 0.5s ease;
+
   svg {
     width: 28px;
     height: 28px;
@@ -303,7 +304,6 @@ onMounted(() => {});
 
   --button-theme: var(--primary);
   --button-text-color: var(--dark);
-  --button-border-color: green;
 
   color: var(--button-text-color);
 
