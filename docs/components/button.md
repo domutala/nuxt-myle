@@ -6,6 +6,8 @@
 <m-button>My Button</m-button>
 ```
 
+<script src="https://gist.github.com/domutala/58039bd4a833aecb039249b6494f7cb9.js"></script>
+
 ## Props
 
 | Prop           | Description                                                                                                                                                   | Valeur par défaut |
