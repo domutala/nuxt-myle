@@ -7,6 +7,7 @@ export interface PopperOptions {
   /** @default 0 */ paddingClose?: number;
   /** @default 7 */ offset?: number;
   /** @default 662 */ width?: number | string;
+  /** @default 500 */ zIndex?: number;
 
   targetClass?: string;
 
@@ -39,7 +40,7 @@ export function popper(
   options: PopperOptions = {}
 ) {
   if (typeof window === "undefined") return;
-
+  options.zIndex = options.zIndex || 500;
   if (typeof options.type !== "string") options.type = "modal";
   if (typeof options.closeOnEsc !== "boolean") options.closeOnEsc = true;
   if (typeof options.closeOnOutside !== "boolean") {
@@ -51,7 +52,12 @@ export function popper(
   const _id = Math.random().toString().split(".")[1].slice(0, 6);
   let _content: HTMLElement | null = null;
   let _target: HTMLElement | null = null;
-  let _back: HTMLElement;
+
+  // let _back: HTMLElement;
+  const _back = document.createElement("div");
+  _back.classList.add("popper-modal-back");
+  _back.style.zIndex = `${options.zIndex}`;
+  document.body.appendChild(_back);
 
   if (options.target) {
     if (typeof options.target === "string") {
@@ -73,13 +79,10 @@ export function popper(
   if (options.type === "modal") {
     _content.classList.remove("modal");
     _content.classList.add("modal");
-
-    _back = document.createElement("div");
-    _back.classList.add("popper-modal-back");
-    document.body.appendChild(_back);
   } else if (options.type === "popup") {
     _content.classList.remove("popup");
     _content.classList.add("popup");
+    _back.style.opacity = "0.3";
   }
 
   const firstChild = _content.children.item(0) as HTMLElement;
