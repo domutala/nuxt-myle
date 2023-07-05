@@ -238,10 +238,19 @@ function close() {
                 </m-button>
               </template>
               <div class="p-20 bg-dark color-light text-center">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sit
-                quidem consectetur suscipit maiores debitis quasi dicta esse
-                odit aperiam cumque error voluptatem numquam, ex natus incidunt
-                harum ducimus. Atque, voluptatum.
+                <div class="fz-24 fw-900">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit
+                </div>
+
+                <div
+                  class="w-100 h-3 bg-light-050 mx-auto my-15 radius-50"
+                ></div>
+                <div>
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sit
+                  quidem consectetur suscipit maiores debitis quasi dicta esse
+                  odit aperiam cumque error voluptatem numquam, ex natus
+                  incidunt harum ducimus. Atque, voluptatum.
+                </div>
               </div>
             </m-popper-controller>
           </div>
