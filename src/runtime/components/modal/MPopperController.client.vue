@@ -40,6 +40,12 @@ function mounted() {
       if (props.options.onMounted) props.options.onMounted(p);
     };
 
+    if (props.options.type === "tooltip") {
+      target.value.addEventListener("mouseenter", () => open());
+    } else {
+      target.value.addEventListener("click", () => open());
+    }
+
     if (props.options.openOnMounted) open();
   }, 0);
 }
@@ -63,13 +69,13 @@ defineExpose({ popper, open });
 </script>
 
 <template>
-  <span
+  <div
     ref="target"
     :class="opts.targetClass"
-    @click="open()"
+    class="m-popper-controller-target"
   >
     <slot name="target" />
-  </span>
+  </div>
 
   <m-popup
     v-if="isOpen && opts.type === 'popup'"
@@ -87,3 +93,9 @@ defineExpose({ popper, open });
     <slot />
   </m-modal>
 </template>
+
+<style lang="scss" scoped>
+.m-popper-controller-target {
+  display: inline-block;
+}
+</style>

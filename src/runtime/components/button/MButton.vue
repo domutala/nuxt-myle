@@ -131,8 +131,13 @@ function buildColor() {
         ".button-hover"
       ) as HTMLButtonElement;
       if (bdElement) {
-        bdElement.style.backgroundColor =
-          GetContrastTextColor(color) === 1 ? "black" : "white";
+        if (props.flat !== false) {
+          bdElement.style.backgroundColor =
+            button.value.style.getPropertyValue("--button-theme");
+        } else {
+          bdElement.style.backgroundColor =
+            GetContrastTextColor(color) === 1 ? "black" : "white";
+        }
       }
     }
   }, 10);

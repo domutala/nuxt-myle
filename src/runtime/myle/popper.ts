@@ -7,13 +7,15 @@ export interface PopperOptions {
   /** @default 0 */ paddingClose?: number;
   /** @default 7 */ offset?: number;
   /** @default 662 */ width?: number | string;
+  /** @default 6px */ borderRadius?: number | string;
   /** @default 500 */ zIndex?: number;
 
   targetClass?: string;
+  maxWidth?: number;
 
   alignment?: {
-    vertical: "bottom" | "top";
-    horizontal: "left" | "right";
+    main?: "bottom" | "top";
+    centered?: boolean;
   };
   target?: string | HTMLElement;
 
@@ -40,6 +42,8 @@ export function popper(
   options: PopperOptions = {}
 ) {
   if (typeof window === "undefined") return;
+
+  options.borderRadius = options.borderRadius || "6px";
   options.zIndex = options.zIndex || 500;
   if (typeof options.type !== "string") options.type = "modal";
   if (typeof options.closeOnEsc !== "boolean") options.closeOnEsc = true;
@@ -53,7 +57,6 @@ export function popper(
   let _content: HTMLElement | null = null;
   let _target: HTMLElement | null = null;
 
-  // let _back: HTMLElement;
   const _back = document.createElement("div");
   _back.classList.add("popper-modal-back");
   _back.style.zIndex = `${options.zIndex}`;
@@ -75,20 +78,32 @@ export function popper(
   if (!_content) return;
 
   _content.classList.add("popper");
+  _content.style.zIndex = options.zIndex.toString();
 
   if (options.type === "modal") {
     _content.classList.remove("modal");
     _content.classList.add("modal");
-  } else if (options.type === "popup") {
+  } else {
     _content.classList.remove("popup");
-    _content.classList.add("popup");
-    _back.style.opacity = "0.3";
+    _content.classList.remove("tooltip");
+    _content.classList.add(options.type);
+    _back.style.opacity = "0.1";
   }
+
+  // supprimer le back si type = "tooltip"
+  if (options.type === "tooltip") {
+    document.body.removeChild(_back);
+  }
+
+  _content.style.borderRadius =
+    typeof options.borderRadius === "string"
+      ? options.borderRadius
+      : `${options.borderRadius}px`;
 
   const firstChild = _content.children.item(0) as HTMLElement;
   firstChild.style.width =
     typeof options.width === "string"
-      ? `${options.width}`
+      ? options.width
       : typeof options.width === "number"
       ? `${options.width}px`
       : "662px";
@@ -111,6 +126,17 @@ export function popper(
       const isEnd = poppers[poppers.length - 1] === _id;
       return isEnd;
     },
+    isIn(el: HTMLElement, event: MouseEvent) {
+      const paddingClose = options.paddingClose || 0;
+      const popperRect = el.getBoundingClientRect();
+      const isIn =
+        popperRect.left - paddingClose <= event.clientX &&
+        popperRect.right + paddingClose >= event.clientX &&
+        popperRect.top - paddingClose <= event.clientY &&
+        popperRect.bottom + paddingClose >= event.clientY;
+
+      return isIn;
+    },
   };
 
   const popper = {
@@ -120,13 +146,17 @@ export function popper(
     firstChild,
   };
 
-  if (options.type === "popup" && _target) {
+  if (options.type !== "modal" && _target) {
     aligner(_content!, _target, destroy, options);
   }
 
   setTimeout(() => {
-    addEventListener("click", onOutsideClick);
     addEventListener("keydown", onEsc);
+
+    if (options.type === "tooltip") {
+      addEventListener("mousemove", onOutsideClick);
+    } else addEventListener("click", onOutsideClick);
+
     if (options.onMounted) options.onMounted(popper);
   }, 10);
 
@@ -143,14 +173,12 @@ export function popper(
     if (!utils.isEnd()) return;
     if (!_content) return;
 
-    const paddingClose = options.paddingClose || 0;
-    const popperRect = _content.getBoundingClientRect();
-    const isIn =
-      popperRect.left - paddingClose <= event.clientX &&
-      popperRect.right + paddingClose >= event.clientX &&
-      popperRect.top - paddingClose <= event.clientY &&
-      popperRect.bottom + paddingClose >= event.clientY;
-    if (isIn) return;
+    if (event.type === "mousemove") {
+      if (utils.isIn(_content, event)) return;
+
+      if (!_target) return;
+      if (utils.isIn(_target, event)) return;
+    } else if (utils.isIn(_content, event)) return;
 
     if (options.closeOnOutside) destroy();
   }
@@ -201,8 +229,9 @@ function aligner(
 
     const exBottom = window.innerHeight - targetRect.bottom;
     const exTop = targetRect.top;
-    vertAlignment = options.alignment?.vertical
-      ? options.alignment?.vertical
+
+    vertAlignment = options.alignment?.main
+      ? options.alignment?.main
       : exBottom > 410
       ? "bottom"
       : exBottom > exTop
@@ -211,70 +240,70 @@ function aligner(
 
     const exLeft = targetRect.right;
     const exRight = window.innerWidth - targetRect.left;
-    horizAlignment = options.alignment?.horizontal
-      ? options.alignment?.horizontal
-      : exRight > 350
-      ? "right"
-      : exRight > exLeft
-      ? "right"
-      : "left";
+    horizAlignment =
+      exRight > 350 ? "right" : exRight > exLeft ? "right" : "left";
 
-    alignOnBottom();
-    alignOnTop();
-    alignOnRight();
-    alignOnLeft();
+    const positions = setPositions();
+
+    if (options.maxWidth && positions.maxWidth > options.maxWidth) {
+      positions.maxWidth = options.maxWidth;
+    }
+    firstChild.style.maxWidth = `${positions.maxWidth}px`;
+    delete positions.maxWidth;
+
+    firstChild.style.maxHeight = `${positions.maxHeight}px`;
+    delete positions.maxHeight;
+
+    for (const key of Object.keys(positions)) {
+      if (options.alignment?.centered) {
+        if (key === "left") {
+          const m = (targetRect.width || 1) / 2;
+          positions[key] += m;
+          positions[key] -= content.getBoundingClientRect().width / 2;
+
+          if (positions[key] < 0) positions[key] = 15;
+        } else if (key === "right") {
+          const m = (targetRect.width || 1) / 2;
+          positions[key] += m;
+          positions[key] -= content.getBoundingClientRect().width / 2;
+          if (positions[key] < 0) positions[key] = 15;
+        }
+      }
+
+      content.style[key as "width"] = `${positions[key]}px`;
+    }
 
     setTimeout(setPosition, 50);
   }
 
-  function alignOnBottom() {
-    if (vertAlignment !== "bottom") return;
-    if (!target) return;
-    if (!content) return;
+  function setPositions() {
+    const positions: { [key: string]: number } = {};
+    if (!target) return positions;
+    if (!content) return positions;
 
     const targetRect = target.getBoundingClientRect();
-    const top = targetRect.bottom + offset;
-    content.style.top = `${top}px`;
 
-    const maxHeight = window.innerHeight - (top + 15);
-    firstChild.style.maxHeight = `${maxHeight}px`;
-  }
+    if (vertAlignment === "bottom") {
+      positions.top = targetRect.bottom + offset;
+      positions.maxHeight = window.innerHeight - (positions.top + 15);
+    } else if (vertAlignment === "top") {
+      positions.bottom = window.innerHeight - targetRect.top + offset;
+      positions.maxHeight = targetRect.top - (offset + 15);
+    }
 
-  function alignOnTop() {
-    if (vertAlignment !== "top") return;
-    if (!target) return;
-    if (!content) return;
+    if (horizAlignment === "left") {
+      positions.right = window.innerWidth - targetRect.right;
+      positions.maxWidth = targetRect.right - 15;
+    } else if (horizAlignment === "right") {
+      positions.left = targetRect.left;
+      positions.maxWidth = window.innerWidth - (targetRect.left + 15);
+    }
+    // else if (horizAlignment === "center") {
+    //   positions.left = targetRect.left + targetRect.width / 2;
+    //   positions.maxWidth = window.innerWidth - 30;
+    // }
 
-    const targetRect = target.getBoundingClientRect();
-    const bottom = window.innerHeight - targetRect.top + offset;
-    content.style.bottom = `${bottom}px`;
-
-    const maxHeight = targetRect.top - (offset + 15);
-    firstChild.style.maxHeight = `${maxHeight}px`;
-  }
-
-  function alignOnRight() {
-    if (horizAlignment !== "right") return;
-    if (!target) return;
-    if (!content) return;
-
-    const targetRect = target.getBoundingClientRect();
-    content.style.left = `${targetRect.left}px`;
-
-    const maxWidth = window.innerWidth - (targetRect.left + 15);
-    firstChild.style.maxWidth = `${maxWidth}px`;
-  }
-
-  function alignOnLeft() {
-    if (horizAlignment !== "left") return;
-    if (!target) return;
-    if (!content) return;
-
-    const targetRect = target.getBoundingClientRect();
-    content.style.right = `${window.innerWidth - targetRect.right}px`;
-
-    const maxWidth = targetRect.right - 15;
-    firstChild.style.maxWidth = `${maxWidth}px`;
+    return positions;
   }
 }
 
