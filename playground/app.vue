@@ -17,6 +17,33 @@ function close() {
 <template>
   <div style="width: 100%; height: 100%; position: fixed; overflow: auto">
     <div class="container py-20">
+      <div class="play-card-one p-20 my-20 radius-10">
+        <div class="play-card-header">
+          <div class="groove bg-dark-095 radius-10"></div>
+        </div>
+        <div class="d-flex fd-column gap-10">
+          <div class="fw-900 fz-22">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Non quis in
+            dolorem, eveniet,
+          </div>
+
+          <div class="opacity-050">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae
+            accusamus ut eligendi libero, fuga temporibus minus ab et harum
+            pariatur esse alias voluptates possimus repellat rem repellendus
+            earum, quidem officiis.
+          </div>
+
+          <div class="d-flex ai-center gap-10">
+            <div class="w-36 h-36 bg-dark-095 radius-100"></div>
+            <div>
+              <div class="fz-14 fw-700">Lorem ipsum, dolor sit</div>
+              <div class="fz-12 opacity-050">Lorem ipsum</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <m-checkbox
         border-radius="16em"
         is-switcher
@@ -671,6 +698,29 @@ function close() {
     </div>
   </div>
 </template>
+<style lang="scss" scoped>
+.play-card-one {
+  width: 662px;
+  max-width: 100%;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  display: flex;
+  gap: 20px;
+
+  .groove {
+    width: 250px;
+    height: 100%;
+  }
+
+  @media (max-width: 662px) {
+    flex-direction: column;
+
+    .groove {
+      width: 100%;
+      height: 250px;
+    }
+  }
+}
+</style>
 
 <style>
 body {
