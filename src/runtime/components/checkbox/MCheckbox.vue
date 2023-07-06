@@ -9,12 +9,44 @@ import {
 
 const props = defineProps({
   modelValue: {
-    type: Object as PropType<Boolean | Array<any>>,
+    type: [
+      Number,
+      Boolean,
+      String,
+      Array,
+      Object,
+      undefined,
+      null,
+    ] as PropType<any>,
     default: null,
   },
-  value: { type: [Number, Boolean, String, Array, Object] as PropType<any> },
-  trueValue: { type: [Number, Boolean, String, Array, Object], default: true },
-  falseValue: { type: [Number, Boolean, String, Array, Object], default: true },
+  value: {
+    type: [Number, Boolean, String, Array, Object] as PropType<any>,
+  },
+  trueValue: {
+    type: [
+      Number,
+      Boolean,
+      String,
+      Array,
+      Object,
+      undefined,
+      null,
+    ] as PropType<any>,
+    default: true,
+  },
+  falseValue: {
+    type: [
+      Number,
+      Boolean,
+      String,
+      Array,
+      Object,
+      undefined,
+      null,
+    ] as PropType<any>,
+    default: true,
+  },
 
   primary: { default: true, type: Boolean },
   danger: { default: false, type: Boolean },

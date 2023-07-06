@@ -1,4 +1,4 @@
-# Composant Button
+# Button
 
 ## example
 
