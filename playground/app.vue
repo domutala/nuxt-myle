@@ -17,10 +17,12 @@ function close() {
 <template>
   <div style="width: 100%; height: 100%; position: fixed; overflow: auto">
     <div class="container py-20">
+      {{ isChecked }}
       <m-checkbox
         v-model:model-value="isChecked"
         value="hello"
-        dark
+        border-radius="16em"
+        is-switcher
       />
 
       Nuxt module playground!
