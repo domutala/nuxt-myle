@@ -51,6 +51,7 @@ const props = defineProps({
   borderRadius: { default: "0.3em", type: [String, Number] },
   border: { default: "0", type: [Number, String] },
   disabled: { default: false, type: Boolean },
+  readonly: { default: false, type: Boolean },
   isSwitcher: { default: false, type: Boolean },
   showBack: { default: true, type: Boolean },
 });
@@ -106,7 +107,7 @@ function buildColor() {
       if (before.value) {
         if (isChecked.value) {
           before.value.style.backgroundColor =
-            GetContrastTextColor(color) === 1 ? "black" : "white";
+            color === "rgb(255, 255, 255)" ? "black" : "white";
         } else before.value.style.backgroundColor = "var(--theme-color)";
       }
 
@@ -116,14 +117,12 @@ function buildColor() {
   }, 10);
 }
 
-watch(() => isChecked.value, onIsChecked);
 function onIsChecked() {
   if (Array.isArray(props.modelValue)) {
     const i = props.modelValue.indexOf(props.value);
+
     if (i === -1) {
-      if (props.modelValue.includes(props.value)) {
-        emit("update:modelValue", [...props.modelValue, props.value]);
-      }
+      emit("update:modelValue", [...props.modelValue, props.value]);
     } else {
       const updatedValue = [...props.modelValue];
       updatedValue.splice(i, 1);
@@ -141,8 +140,8 @@ onMounted(onValue);
 watch(() => props.modelValue, onValue, { deep: true });
 function onValue() {
   if (Array.isArray(props.modelValue)) {
-    const i = props.modelValue.indexOf(props.value);
-    if (i === -1) isChecked.value = false;
+    const is = props.modelValue.filter((v) => v === props.value).length > 0;
+    if (!is) isChecked.value = false;
     else isChecked.value = true;
   } else isChecked.value = props.modelValue === props.trueValue;
 }
@@ -163,17 +162,6 @@ const style = computed(() => {
   return style;
 });
 
-watch(
-  () => style.value,
-  () => {
-    if (!checkbox.value) return;
-
-    const rect = checkbox.value.getBoundingClientRect();
-    checkbox.value.style.width = `${rect.height * 1.5}px`;
-  },
-  { deep: true }
-);
-
 const styleBorder = computed(() => {
   const style: { [key: string]: string } = {};
   const bd = CssValue({ value: props.border });
@@ -184,82 +172,97 @@ const styleBorder = computed(() => {
 
 const handleChange = () => {
   isChecked.value = !isChecked.value;
+  onIsChecked();
 };
 </script>
 
 <template>
   <label
-    ref="checkbox"
-    class="checkbox"
-    :style="style"
-    :class="[typeColor, { active: isChecked }]"
+    class="checkbox-container"
+    :class="{ readonly, disabled }"
   >
     <div
-      v-if="showBack"
-      class="checkbox-back"
-    ></div>
-
-    <div
-      class="checkbox-background"
-      :style="{ opacity: isChecked ? 1 : 0 }"
-    >
-      <input
-        type="checkbox"
-        :checked="isChecked"
-        @change="handleChange"
-      />
-    </div>
-    <div
-      class="checkbox-boder"
-      :style="styleBorder"
-    ></div>
-    <div class="checkbox-hover"></div>
-
-    <div
-      class="checkbox-content"
-      :style="{
-        width: nSize.valueUnit,
-        height: nSize.valueUnit,
-        marginLeft: isChecked ? `calc(100% - ${nSize.valueUnit})` : '0%',
-      }"
+      ref="checkbox"
+      class="checkbox"
+      :style="style"
+      :class="[typeColor, { active: isChecked }]"
     >
       <div
-        v-if="isSwitcher"
-        ref="before"
-        class="checkbox-content-before"
+        v-if="showBack"
+        class="checkbox-back"
       ></div>
-      <svg
-        v-if="isChecked"
-        xmlns="http://www.w3.org/2000/svg"
-        version="1.1"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        xmlns:svgjs="http://svgjs.com/svgjs"
-        viewBox="0 0 511.985 511.985"
-        xml:space="preserve"
+
+      <div
+        class="checkbox-background"
+        :style="{ opacity: isChecked ? 1 : 0 }"
       >
-        <g>
-          <path
-            d="M500.088 83.681c-15.841-15.862-41.564-15.852-57.426 0L184.205 342.148 69.332 227.276c-15.862-15.862-41.574-15.862-57.436 0-15.862 15.862-15.862 41.574 0 57.436l143.585 143.585c7.926 7.926 18.319 11.899 28.713 11.899 10.394 0 20.797-3.963 28.723-11.899l287.171-287.181c15.862-15.851 15.862-41.574 0-57.435z"
-          ></path>
-        </g>
-      </svg>
+        <input
+          type="checkbox"
+          :checked="isChecked"
+          :disabled="readonly || disabled"
+          @change="handleChange"
+        />
+      </div>
+      <div
+        class="checkbox-boder"
+        :style="styleBorder"
+      ></div>
+      <div class="checkbox-hover"></div>
+
+      <div
+        class="checkbox-content"
+        :style="{
+          width: nSize.valueUnit,
+          height: nSize.valueUnit,
+          marginLeft: isChecked ? `calc(100% - ${nSize.valueUnit})` : '0%',
+        }"
+      >
+        <div
+          v-if="isSwitcher"
+          ref="before"
+          class="checkbox-content-before"
+        ></div>
+        <svg
+          v-if="isChecked"
+          xmlns="http://www.w3.org/2000/svg"
+          version="1.1"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          xmlns:svgjs="http://svgjs.com/svgjs"
+          viewBox="0 0 511.985 511.985"
+          xml:space="preserve"
+        >
+          <g>
+            <path
+              d="M500.088 83.681c-15.841-15.862-41.564-15.852-57.426 0L184.205 342.148 69.332 227.276c-15.862-15.862-41.574-15.862-57.436 0-15.862 15.862-15.862 41.574 0 57.436l143.585 143.585c7.926 7.926 18.319 11.899 28.713 11.899 10.394 0 20.797-3.963 28.723-11.899l287.171-287.181c15.862-15.851 15.862-41.574 0-57.435z"
+            ></path>
+          </g>
+        </svg>
+      </div>
     </div>
+
+    <slot />
   </label>
 </template>
 
 <style lang="scss" scoped>
-$colors: (
-  "danger" #fff,
-  "info" #000,
-  "success" #fff,
-  "primary" #000,
-  "dark" var(--light),
-  "light" var(--dark)
-);
+.checkbox-container {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  user-select: none;
 
+  &:not(.disabled),
+  &:not(.readonly) {
+    cursor: pointer;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+  }
+}
 .checkbox {
   position: relative;
-  cursor: pointer;
   align-items: center;
   display: inline-flex;
   color: var(--dark);
@@ -334,8 +337,8 @@ $colors: (
     svg {
       height: 50%;
       width: 50%;
-      max-width: 10px;
-      max-height: 10px;
+      max-width: 8px;
+      max-height: 8px;
       display: block;
       position: relative;
     }

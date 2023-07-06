@@ -17,13 +17,14 @@ function close() {
 <template>
   <div style="width: 100%; height: 100%; position: fixed; overflow: auto">
     <div class="container py-20">
-      {{ isChecked }}
       <m-checkbox
-        v-model:model-value="isChecked"
-        value="hello"
         border-radius="16em"
         is-switcher
-      />
+        class="px-15 py-12 bg-dark-095 bg-hover-dark-090 radius-10"
+      >
+        <div class="fw-900">Nuxt module playground!</div>
+      </m-checkbox>
+      {{ isChecked }}
 
       Nuxt module playground!
 
@@ -165,12 +166,27 @@ function close() {
               *** hello ***
             </m-button>
           </template>
-          <div class="p-20">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim veniam
-            impedit quam reiciendis maxime? Magni nihil aspernatur mollitia
-            perferendis soluta? Est omnis libero dolores similique sapiente.
-            Sapiente cupiditate officia ipsum.
-            <button @click="close">close</button>
+          <!-- <button @click="close">close</button> -->
+
+          <div class="d-flex ai-center fd-column gap-5 p-5">
+            <m-checkbox
+              v-model:model-value="isChecked"
+              value="true"
+              border-radius="16em"
+              is-switcher
+              class="px-15 py-12 bg-dark-095 bg-hover-dark-090 radius-10 w-100p"
+            >
+              <div class="fw-900">Nuxt module playground!</div>
+            </m-checkbox>
+            <m-checkbox
+              v-model:model-value="isChecked"
+              value="false"
+              border-radius="16em"
+              is-switcher
+              class="px-15 py-12 bg-dark-095 bg-hover-dark-090 radius-10 w-100p"
+            >
+              <div class="fw-900">Nuxt module playground!</div>
+            </m-checkbox>
           </div>
         </m-popper-controller>
 
@@ -252,6 +268,27 @@ function close() {
                   quidem consectetur suscipit maiores debitis quasi dicta esse
                   odit aperiam cumque error voluptatem numquam, ex natus
                   incidunt harum ducimus. Atque, voluptatum.
+
+                  <div class="d-flex ai-center fd-column gap-5 p-5">
+                    <m-checkbox
+                      v-model:model-value="isChecked"
+                      value="hello"
+                      border-radius="16em"
+                      is-switcher
+                      class="px-15 py-12 bg-light-095 bg-hover-light-090 radius-10 w-100p"
+                    >
+                      <div class="fw-900">Nuxt module playground!</div>
+                    </m-checkbox>
+                    <m-checkbox
+                      v-model:model-value="isChecked"
+                      value="hi"
+                      border-radius="16em"
+                      is-switcher
+                      class="px-15 py-12 bg-light-095 bg-hover-light-090 radius-10 w-100p"
+                    >
+                      <div class="fw-900">Nuxt module playground!</div>
+                    </m-checkbox>
+                  </div>
                 </div>
               </div>
             </m-popper-controller>

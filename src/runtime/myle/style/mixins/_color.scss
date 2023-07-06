@@ -17,15 +17,20 @@
   }
 }
 
-@mixin mBuildColor($color, $name) {
-  .bg-#{$name} {
+@mixin mBuildColor($color, $name, $state: "") {
+  $nstate: "";
+  @if str-length($state) > 1 {
+    $nstate: "-#{str-slice($state, 2)}";
+  }
+
+  .bg#{$nstate}-#{$name}#{$state} {
     background-color: var(--#{$name});
   }
-  .color-#{$name} {
+  .color#{$nstate}-#{$name}#{$state} {
     color: var(--#{$name});
   }
 
-  @for $i from 1 through 100 {
+  @for $i from 0 through 101 {
     $o: 100 - $i;
     @if $o > 9 {
       $o: "0#{$o}";
@@ -33,10 +38,10 @@
       $o: "00#{$o}";
     }
 
-    .bg-#{$name}-#{$o} {
+    .bg#{$nstate}-#{$name}-#{$o}#{$state} {
       background-color: var(--#{$name}-#{$o});
     }
-    .color-#{$name}-#{$o} {
+    .color#{$nstate}-#{$name}-#{$o}#{$state} {
       color: var(--#{$name}-#{$o});
     }
   }

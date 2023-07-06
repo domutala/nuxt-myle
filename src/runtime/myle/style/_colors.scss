@@ -6,4 +6,11 @@
 
 @each $key, $color in $colors {
   @include mBuildColor($color, $key);
+  @include mBuildColor($color, $key, ":active");
+  @include mBuildColor($color, $key, ":focus");
+  @include mBuildColor($color, $key, ":focus-within");
+  @include mBuildColor($color, $key, ":target");
+  @include mBuildColor($color, $key, ":hover");
+  @include mBuildColor($color, $key, ":visited");
+  @include mBuildColor($color, $key, ":focus-visible");
 }

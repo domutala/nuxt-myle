@@ -8,40 +8,51 @@
   display: block;
 }
 
+.ai-center,
 .align-items-center {
   align-items: center;
 }
+.ai-start,
 .align-items-start {
   align-items: flex-start;
 }
+.ai-end,
 .align-items-end {
   align-items: flex-end;
 }
 
+.jc-center,
 .justify-content-center {
   justify-content: center;
 }
+.jc-start,
 .justify-content-start {
   justify-content: flex-start;
 }
+.jc-end,
 .justify-content-end {
   justify-content: flex-end;
 }
 
+.fw-wrap,
 .flex-wrap-wrap {
   flex-wrap: wrap;
 }
 
+.fd-column,
 .flex-direction-column {
   flex-direction: column;
 }
+.fd-row,
 .flex-direction-row {
   flex-direction: row;
 }
 
+.fd-column-reverse,
 .flex-direction-column-reverse {
   flex-direction: column-reverse;
 }
+.fd-row-reverse,
 .flex-direction-row-reverse {
   flex-direction: row-reverse;
 }
