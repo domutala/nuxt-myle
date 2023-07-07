@@ -170,7 +170,6 @@ export function popper(
   }
 
   function onOutsideClick(event: MouseEvent) {
-    if (!utils.isEnd()) return;
     if (!_content) return;
 
     if (event.type === "mousemove") {
@@ -178,7 +177,10 @@ export function popper(
 
       if (!_target) return;
       if (utils.isIn(_target, event)) return;
-    } else if (utils.isIn(_content, event)) return;
+    } else {
+      if (!utils.isEnd()) return;
+      if (utils.isIn(_content, event)) return;
+    }
 
     if (options.closeOnOutside) destroy();
   }

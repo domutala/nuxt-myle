@@ -181,39 +181,56 @@ function close() {
 
       <div class="d-flex p-15 gap-10">
         <m-popper-controller
-          ref="controller1"
-          :options="{ type: 'popup', alignment: {} }"
+          :options="{
+            type: 'tooltip',
+            width: 'unset',
+            maxWidth: 200,
+            alignment: { centered: true },
+            borderRadius: '16em',
+          }"
         >
           <template #target>
-            <m-button
-              danger
-              border-width="3px"
-              flat
+            <m-popper-controller
+              ref="controller1"
+              :options="{ type: 'popup', alignment: {} }"
             >
-              *** hello ***
-            </m-button>
-          </template>
-          <!-- <button @click="close">close</button> -->
+              <template #target>
+                <m-button
+                  danger
+                  border-width="3px"
+                  flat
+                  icon
+                >
+                  <i class="fi fi-ss-settings"></i>
+                </m-button>
+              </template>
+              <button @click="close">close</button>
 
-          <div class="d-flex ai-center fd-column gap-5 p-5">
-            <m-checkbox
-              v-model:model-value="isChecked"
-              value="true"
-              border-radius="16em"
-              is-switcher
-              class="px-15 py-12 bg-dark-095 bg-hover-dark-090 radius-10 w-100p"
-            >
-              <div class="fw-900">Nuxt module playground!</div>
-            </m-checkbox>
-            <m-checkbox
-              v-model:model-value="isChecked"
-              value="false"
-              border-radius="16em"
-              is-switcher
-              class="px-15 py-12 bg-dark-095 bg-hover-dark-090 radius-10 w-100p"
-            >
-              <div class="fw-900">Nuxt module playground!</div>
-            </m-checkbox>
+              <div class="d-flex ai-center fd-column gap-5 p-5">
+                <m-checkbox
+                  v-model:model-value="isChecked"
+                  value="true"
+                  border-radius="16em"
+                  is-switcher
+                  class="px-15 py-12 bg-dark-095 bg-hover-dark-090 radius-10 w-100p"
+                >
+                  <div class="fw-900">Nuxt module playground!</div>
+                </m-checkbox>
+                <m-checkbox
+                  v-model:model-value="isChecked"
+                  value="false"
+                  border-radius="16em"
+                  is-switcher
+                  class="px-15 py-12 bg-dark-095 bg-hover-dark-090 radius-10 w-100p"
+                >
+                  <div class="fw-900">Nuxt module playground!</div>
+                </m-checkbox>
+              </div>
+            </m-popper-controller>
+          </template>
+
+          <div class="px-10 py-5 text-center bg-dark-020 color-light fz-10">
+            Settings
           </div>
         </m-popper-controller>
 
@@ -303,6 +320,7 @@ function close() {
                       border-radius="16em"
                       is-switcher
                       class="px-15 py-12 bg-light-095 bg-hover-light-090 radius-10 w-100p"
+                      theme="#f79514"
                     >
                       <div class="fw-900">Nuxt module playground!</div>
                     </m-checkbox>
@@ -312,6 +330,7 @@ function close() {
                       border-radius="16em"
                       is-switcher
                       class="px-15 py-12 bg-light-095 bg-hover-light-090 radius-10 w-100p"
+                      theme="#f79514"
                     >
                       <div class="fw-900">Nuxt module playground!</div>
                     </m-checkbox>
@@ -722,8 +741,15 @@ function close() {
 }
 </style>
 
-<style>
+<style lang="scss">
+@import url("https://cdn-uicons.flaticon.com/uicons-solid-straight/css/uicons-solid-straight.css");
+
 body {
   margin: 0;
+  i {
+    &::before {
+      display: block;
+    }
+  }
 }
 </style>
