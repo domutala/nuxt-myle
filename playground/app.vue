@@ -16,6 +16,47 @@ function close() {
 
 <template>
   <div style="width: 100%; height: 100%; position: fixed; overflow: auto">
+    <div class="container">
+      <div
+        v-for="i in 12"
+        :key="i"
+        class="grid"
+      >
+        <div :class="`col-${i}`">
+          <div
+            class="m-5 p-10 radius-20 bg-dark color-light text-center fz-14 fw-900"
+          >
+            col-{{ i }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="grid">
+        <div class="col-6 col-sm-12">
+          <div
+            class="m-5 p-10 radius-20 bg-dark color-light text-center fz-14 fw-900"
+          >
+            col-6 col-sm-12
+          </div>
+        </div>
+        <div class="col-4 col-sm-6">
+          <div
+            class="m-5 p-10 radius-20 bg-dark color-light text-center fz-14 fw-900"
+          >
+            col-4 col-sm-6
+          </div>
+        </div>
+        <div class="col-2 col-sm-6">
+          <div
+            class="m-5 p-10 radius-20 bg-dark color-light text-center fz-14 fw-900"
+          >
+            col-2 col-sm-6
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="container py-20">
       <div class="play-card-one p-20 my-20 radius-10">
         <div class="play-card-header">

@@ -5,6 +5,16 @@
     $index: -#{$index};
   }
 
+  .grid.grid-center#{$index} {
+    justify-content: center;
+  }
+  .grid.grid-start#{$index} {
+    justify-content: flex-start;
+  }
+  .grid.grid-end#{$index} {
+    justify-content: flex-end;
+  }
+
   @for $i from 1 through 12 {
     $w: math.div(100, $i);
 
@@ -12,6 +22,20 @@
       > * {
         width: #{$w}#{"%"};
       }
+    }
+  }
+}
+
+@mixin mBuildGridColumn($index: "") {
+  @if str-length($string: $index) > 0 {
+    $index: -#{$index};
+  }
+
+  @for $i from 1 through 12 {
+    $w: math.div(100, 12) * $i;
+
+    .col#{$index}-#{$i} {
+      width: #{$w}#{"%"};
     }
   }
 }

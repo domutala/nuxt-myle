@@ -307,8 +307,8 @@ onMounted(() => {});
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   }
 
-  --button-theme: var(--primary);
-  --button-text-color: var(--dark);
+  --button-theme: var(--light);
+  --button-text-color: var(--light);
 
   color: var(--button-text-color);
 

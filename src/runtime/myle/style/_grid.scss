@@ -11,6 +11,11 @@
   &.end {
     justify-content: flex-end;
   }
+
+  @include mBuildGridColumn();
+  @include screen() using ($key) {
+    @include mBuildGridColumn($key);
+  }
 }
 
 @include mBuildGrid();
