@@ -1,5 +1,6 @@
 import {
   addComponentsDir,
+  addImportsDir,
   addPlugin,
   createResolver,
   defineNuxtModule,
@@ -14,6 +15,7 @@ export default defineNuxtModule<Options>({
   meta: {
     name: "nuxt-myle",
     configKey: "myle",
+    compatibility: { nuxt: "^3" },
   },
 
   // Default configuration options of the Nuxt module
@@ -28,16 +30,13 @@ export default defineNuxtModule<Options>({
       mode: "server",
     });
 
+    addImportsDir(resolver.resolve("./runtime/composables/"));
+
     addComponentsDir({
       path: resolver.resolve("./runtime/components/"),
       extensions: [".vue"],
       pathPrefix: false,
       global: true,
     });
-
-    // if (options.withCss) {
-    // const scss = resolver.resolve("./runtime/myle/style/myle.scss");
-    // nuxt.options.css.push(scss);
-    // }
   },
 });
