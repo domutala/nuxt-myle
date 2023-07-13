@@ -75,3 +75,11 @@ export function BlendColor(color: string, opacity: string | number = 1) {
 
   return color;
 }
+
+export default {
+  GetContrastTextColor,
+  HexToRgb,
+  ExtractRGBValues,
+  GetVarColor,
+  BlendColor,
+};
