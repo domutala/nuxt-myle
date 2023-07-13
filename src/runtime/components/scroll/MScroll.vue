@@ -1,5 +1,7 @@
 <script lang="ts" setup>
+import { PropType, ref, onMounted, onDeactivated, onBeforeUnmount } from "vue";
 import { ScrollValues } from "./models";
+import Sleep from "../../myle/utils/Sleep";
 
 defineProps({
   direction: {

@@ -8,7 +8,7 @@ import {
   PropType,
 } from "vue";
 import { Popper, PopperOptions, popper } from "../../myle/popper";
-import { Sleep } from "../../myle/utils";
+import Sleep from "../../myle/utils/Sleep";
 
 const props = defineProps({
   options: { type: Object as PropType<PopperOptions>, default: () => {} },

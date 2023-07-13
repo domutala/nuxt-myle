@@ -1,5 +1,8 @@
 <script lang="ts" setup>
-import HumanScrollVue from "./scroll/index.vue";
+import { ref, onMounted, onDeactivated, onBeforeUnmount, useSlots } from "vue";
+import MScrollVue from "../scroll/MScroll.vue";
+import Sleep from "../../myle/utils/Sleep";
+import { CssValue } from "../../myle/utils/Format";
 
 const props = defineProps({
   space: { type: [String, Number], default: 0 },
@@ -7,21 +10,28 @@ const props = defineProps({
   borderWidth: { type: [String, Number], default: 1 },
 });
 
-const scroll = ref<InstanceType<typeof HumanScrollVue>>();
-const headerValue = computed(() => {
-  return Object.keys(props.colonOptions).map((key) => {
-    return { [key]: { value: props.colonOptions[key].name } };
-  })[0];
-});
+const scroll = ref<InstanceType<typeof MScrollVue>>();
+const slots = useSlots();
 
 onMounted(mounted);
 async function mounted() {
   addEventListener("resize", () => init());
-  Sleep(10);
+  addEventListener("m-table:new-line", () => init());
+  addEventListener("m-table:new-colon", () => init());
+  await Sleep(10);
   init();
 }
 
 function init() {
+  if (slots.default) {
+    const o = slots
+      .default()
+      .filter((slot) => (slot.type as any).__name !== "MTableLine").length;
+    if (o) {
+      throw new Error("MTable take only MTableLine components");
+    }
+  }
+
   if (!scroll.value) return;
 
   const container = scroll.value.getScrollContainer();
@@ -32,6 +42,11 @@ function init() {
   for (let i = 0; i < oneCadres.length; i++) {
     const oneCadre = oneCadres[i] as HTMLElement;
     oneCadre.style.width = `${rect.width}px`;
+
+    oneCadre.style.borderWidth = CssValue({
+      value: props.borderWidth,
+    }).valueUnit;
+    oneCadre.style.borderRadius = CssValue({ value: props.radius }).valueUnit;
   }
 
   const sizes: { [key: number]: number } = {};
@@ -51,13 +66,21 @@ function init() {
   }
 
   for (let i = 0; i < oneContainers.length; i++) {
-    const oneContainer = oneContainers[i];
+    const oneContainer = oneContainers[i] as HTMLElement;
+    oneContainer.style.borderRadius = CssValue({
+      value: props.radius,
+    }).valueUnit;
 
     for (let c = 0; c < oneContainer.children.length; c++) {
       const colon = oneContainer.children[c] as HTMLElement;
       colon.style.width = `${sizes[c]}px`;
+      colon.style.borderWidth = CssValue({
+        value: props.borderWidth,
+      }).valueUnit;
     }
   }
+
+  onScroll();
 }
 
 function onScroll() {
@@ -77,6 +100,8 @@ onDeactivated(destroy);
 onBeforeUnmount(destroy);
 function destroy() {
   removeEventListener("resize", () => init());
+  removeEventListener("m-table:new-line", () => init());
+  removeEventListener("m-table:new-colon", () => init());
 }
 </script>
 
@@ -96,14 +121,14 @@ function destroy() {
   padding-bottom: 10px;
 }
 
-.m-table-colon {
+.m-table-line {
   position: relative;
   width: max-content;
   display: flex;
   min-width: 100%;
   min-height: 58px;
 
-  .m-table-colon-cadre {
+  .m-table-line-cadre {
     position: absolute;
     top: 0;
     left: 0;
@@ -115,7 +140,7 @@ function destroy() {
     pointer-events: none;
   }
 
-  .m-table-colon-container {
+  .m-table-line-container {
     display: flex;
     width: max-content;
     border-radius: inherit;
@@ -125,14 +150,8 @@ function destroy() {
       padding: 15px 20px;
       overflow: hidden;
       white-space: nowrap;
-      line-height: 1;
       display: flex;
       align-items: center;
-
-      .subtitle {
-        opacity: 0.5;
-        font-size: 80%;
-      }
 
       &:not(:last-child) {
         border-right: solid var(--dark-085);
@@ -140,21 +159,19 @@ function destroy() {
     }
   }
 
-  .m-table-colon-index {
-    height: 100%;
-    position: sticky;
-    left: 0;
-    z-index: 2;
-    background-color: var(--light);
+  &:not(:first-child) {
+    .m-table-line-cadre {
+      border-top: unset;
+    }
   }
 
-  &:not(.m-table-colon-header) {
+  &:not(.m-table-line-header) {
     cursor: pointer;
 
     &:hover {
       z-index: 10;
 
-      .m-table-colon-cadre {
+      .m-table-line-cadre {
         background-color: var(--dark-097);
       }
     }
