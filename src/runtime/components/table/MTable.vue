@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, onMounted, onDeactivated, onBeforeUnmount, useSlots } from "vue";
+import { ref, onMounted, onDeactivated, onBeforeUnmount } from "vue";
 import MScrollVue from "../scroll/MScroll.vue";
 import Sleep from "../../myle/utils/Sleep";
 import { CssValue } from "../../myle/utils/Format";
@@ -11,7 +11,6 @@ const props = defineProps({
 });
 
 const scroll = ref<InstanceType<typeof MScrollVue>>();
-const slots = useSlots();
 
 onMounted(mounted);
 async function mounted() {
@@ -23,15 +22,6 @@ async function mounted() {
 }
 
 function init() {
-  if (slots.default) {
-    const o = slots
-      .default()
-      .filter((slot) => (slot.type as any).__name !== "MTableLine").length;
-    if (o) {
-      throw new Error("MTable take only MTableLine components");
-    }
-  }
-
   if (!scroll.value) return;
 
   const container = scroll.value.getScrollContainer();
@@ -39,14 +29,19 @@ function init() {
 
   const rect = container.getBoundingClientRect();
   const oneCadres = container.querySelectorAll(".m-table-line-cadre");
+
+  const borderWidth = CssValue({ value: props.borderWidth });
+  const space = CssValue({ value: props.space });
+  const radius = CssValue({ value: props.radius });
+
   for (let i = 0; i < oneCadres.length; i++) {
     const oneCadre = oneCadres[i] as HTMLElement;
     oneCadre.style.width = `${rect.width}px`;
+    oneCadre.style.borderWidth = borderWidth.valueUnit;
+    oneCadre.style.borderRadius = radius.valueUnit;
 
-    oneCadre.style.borderWidth = CssValue({
-      value: props.borderWidth,
-    }).valueUnit;
-    oneCadre.style.borderRadius = CssValue({ value: props.radius }).valueUnit;
+    oneCadre.style.borderTopWidth = borderWidth.valueUnit;
+    if (space.value === 0 && i > 0) oneCadre.style.borderTop = "unset";
   }
 
   const sizes: { [key: number]: number } = {};
@@ -67,16 +62,12 @@ function init() {
 
   for (let i = 0; i < oneContainers.length; i++) {
     const oneContainer = oneContainers[i] as HTMLElement;
-    oneContainer.style.borderRadius = CssValue({
-      value: props.radius,
-    }).valueUnit;
+    oneContainer.style.borderRadius = radius.valueUnit;
 
     for (let c = 0; c < oneContainer.children.length; c++) {
       const colon = oneContainer.children[c] as HTMLElement;
       colon.style.width = `${sizes[c]}px`;
-      colon.style.borderWidth = CssValue({
-        value: props.borderWidth,
-      }).valueUnit;
+      colon.style.borderWidth = borderWidth.valueUnit;
     }
   }
 
@@ -111,16 +102,20 @@ function destroy() {
     direction="horizontal"
     @scroll="onScroll"
   >
-    <slot />
+    <div
+      class="m-table"
+      :style="{ gap: `${CssValue({ value: space }).valueUnit}` }"
+    >
+      <slot />
+    </div>
   </m-scroll>
 </template>
 
 <style lang="scss">
 .m-table {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
 }
-
 .m-table-line {
   position: relative;
   width: max-content;
@@ -159,13 +154,7 @@ function destroy() {
     }
   }
 
-  &:not(:first-child) {
-    .m-table-line-cadre {
-      border-top: unset;
-    }
-  }
-
-  &:not(.m-table-line-header) {
+  &:not(.is-header) {
     cursor: pointer;
 
     &:hover {

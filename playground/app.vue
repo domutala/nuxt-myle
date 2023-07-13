@@ -17,7 +17,10 @@ function close() {
 <template>
   <div style="width: 100%; height: 100%; position: fixed; overflow: auto">
     <div class="container my-20">
-      <m-table radius="10">
+      <m-table
+        radius="10"
+        space="0"
+      >
         <m-table-line>
           <m-table-colon>Lorem ipsum dolor sit</m-table-colon>
           <m-table-colon>Lorem ipsum dolor sit</m-table-colon>
