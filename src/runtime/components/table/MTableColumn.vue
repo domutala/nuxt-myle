@@ -3,13 +3,13 @@ import { onMounted } from "vue";
 
 onMounted(mounted);
 function mounted() {
-  const event = new CustomEvent("m-table:new-colon");
+  const event = new CustomEvent("m-table:new-column");
   dispatchEvent(event);
 }
 </script>
 
 <template>
-  <div class="m-table-colon">
+  <div class="m-table-column">
     <slot />
   </div>
 </template>

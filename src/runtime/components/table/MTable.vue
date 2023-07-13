@@ -16,7 +16,7 @@ onMounted(mounted);
 async function mounted() {
   addEventListener("resize", () => init());
   addEventListener("m-table:new-line", () => init());
-  addEventListener("m-table:new-colon", () => init());
+  addEventListener("m-table:new-column", () => init());
   await Sleep(10);
   init();
 }
@@ -92,7 +92,7 @@ onBeforeUnmount(destroy);
 function destroy() {
   removeEventListener("resize", () => init());
   removeEventListener("m-table:new-line", () => init());
-  removeEventListener("m-table:new-colon", () => init());
+  removeEventListener("m-table:new-column", () => init());
 }
 </script>
 

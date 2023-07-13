@@ -22,14 +22,14 @@ function close() {
         space="0"
       >
         <m-table-line>
-          <m-table-colon>Lorem ipsum dolor sit</m-table-colon>
-          <m-table-colon>Lorem ipsum dolor sit</m-table-colon>
-          <m-table-colon>Lorem ipsum dolor sit</m-table-colon>
-          <m-table-colon>Lorem ipsum dolor sit</m-table-colon>
+          <m-table-column>Lorem ipsum dolor sit</m-table-column>
+          <m-table-column>Lorem ipsum dolor sit</m-table-column>
+          <m-table-column>Lorem ipsum dolor sit</m-table-column>
+          <m-table-column>Lorem ipsum dolor sit</m-table-column>
         </m-table-line>
         <m-table-line>
-          <m-table-colon>Lorem ipsum dolor sit</m-table-colon>
-          <m-table-colon>Lorem ipsum dolor sit</m-table-colon>
+          <m-table-column>Lorem ipsum dolor sit</m-table-column>
+          <m-table-column>Lorem ipsum dolor sit</m-table-column>
         </m-table-line>
       </m-table>
     </div>
